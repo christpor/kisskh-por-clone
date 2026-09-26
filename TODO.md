@@ -1,0 +1,22 @@
+# KissKH Clone — Canonical Task Checklist
+
+- [x] Task 1: Environment & Project Scaffolding (Vite + React 19 + Tailwind CSS + Lucide + Lenis)
+  - Target files: `package.json`, `vite.config.ts`, `index.html`, `tailwind.config.js`, `src/index.css`
+  - Verification: `bun install && bun run build` exited with code 0 (✓ built in 4.12s).
+- [x] Task 2: Authentic Asset Pipeline & Live KissKH Data Snapshot Ingestion
+  - Target files: `public/assets/icons/long_icon.svg`, `public/assets/icons/logo_watermark.svg`, `src/data/mock-kisskh.json`, `src/services/api.ts`
+  - Verification: `mock-kisskh.json` populated with 41KB of authentic live drama data (*Between Steps*, *Perfect Crown*, *Revenged Love*, *The First Frost*).
+- [x] Task 3: Core Navigation, Theme Switcher & Modal Shells
+  - Target files: `src/components/Navbar.tsx`, `src/components/SearchModal.tsx`, `src/components/ThemeModal.tsx`, `src/components/AuthModal.tsx`
+  - Verification: Header with SVG logo, active route pills, and reactive modals tested.
+- [x] Task 4: Screenshot-Parity Homepage (`src/pages/HomePage.tsx`)
+  - Target files: `src/components/HeroCarousel.tsx`, `src/components/ContinueWatching.tsx`, `src/components/DramaRail.tsx`, `src/components/DramaCard.tsx`, `src/pages/HomePage.tsx`
+  - Verification: Visual comparison against `uploaded_media_0` and `uploaded_media_1` verified identical via headless Brave screenshots (`screenshot_rendered_full.png`).
+- [x] Task 5: Full Multi-Route Application Pages
+  - Target files: `src/pages/ExplorePage.tsx`, `src/pages/DramaDetailPage.tsx`, `src/pages/WatchPage.tsx`, `src/pages/FAQPage.tsx`, `src/pages/RequestPage.tsx`, `src/App.tsx`
+  - Verification: Client-side routing across all routes verified; `/Drama/11923` rendered with full synopsis & episode grid (`screenshot_rendered_drama.png`).
+- [x] Task 6: Deterministic Build, Exit Code 0 & Headless Browser Screenshot Gate
+  - Target files: `kisskh-clone/dist/`, `screenshot_rendered_desktop.png`, `screenshot_rendered_full.png`, `screenshot_rendered_mobile.png`, `screenshot_rendered_drama.png`
+  - Verification: `bun run build` exit code 0; dev server responded with HTTP 200; rendered screenshots captured and verified.
+- [x] Task 7: Battery-Proof Atomic Checkpoint & Walkthrough Artifact
+  - Verification: Git commit verified with exit code 0; walkthrough artifact created.
