@@ -8,15 +8,19 @@
   - Verification: `mock-kisskh.json` populated with 41KB of authentic live drama data (*Between Steps*, *Perfect Crown*, *Revenged Love*, *The First Frost*).
 - [x] Task 3: Core Navigation, Theme Switcher & Modal Shells
   - Target files: `src/components/Navbar.tsx`, `src/components/SearchModal.tsx`, `src/components/ThemeModal.tsx`, `src/components/AuthModal.tsx`
-  - Verification: Header with SVG logo, active route pills, and reactive modals tested.
+  - Verification: Full-width search drawer with 8 `MostSearch` cards and category filter pills verified.
 - [x] Task 4: Screenshot-Parity Homepage (`src/pages/HomePage.tsx`)
   - Target files: `src/components/HeroCarousel.tsx`, `src/components/ContinueWatching.tsx`, `src/components/DramaRail.tsx`, `src/components/DramaCard.tsx`, `src/pages/HomePage.tsx`
   - Verification: Visual comparison against `uploaded_media_0` and `uploaded_media_1` verified identical via headless Brave screenshots (`screenshot_rendered_full.png`).
-- [x] Task 5: Full Multi-Route Application Pages
-  - Target files: `src/pages/ExplorePage.tsx`, `src/pages/DramaDetailPage.tsx`, `src/pages/WatchPage.tsx`, `src/pages/FAQPage.tsx`, `src/pages/RequestPage.tsx`, `src/App.tsx`
-  - Verification: Client-side routing across all routes verified; `/Drama/11923` rendered with full synopsis & episode grid (`screenshot_rendered_drama.png`).
+- [x] Task 5: Full Multi-Route Application Pages & Real KissKH Live Movie Streaming Links
+  - Target files: `src/pages/ExplorePage.tsx`, `src/pages/DramaDetailPage.tsx`, `src/pages/WatchPage.tsx`, `src/pages/FAQPage.tsx`, `src/pages/RequestPage.tsx`, `src/App.tsx`, `src/utils/kisskh.ts`
+  - Verification: Outbound live movie streaming bridge (`Real KissKH Movie ↗`) and KissKH embed server integrated and tested.
 - [x] Task 6: Deterministic Build, Exit Code 0 & Headless Browser Screenshot Gate
-  - Target files: `kisskh-clone/dist/`, `screenshot_rendered_desktop.png`, `screenshot_rendered_full.png`, `screenshot_rendered_mobile.png`, `screenshot_rendered_drama.png`
+  - Target files: `kisskh-clone/dist/`, `screenshot_vercel_prod.png`, `screenshot_rendered_search.png`, `screenshot_rendered_watch.png`
   - Verification: `bun run build` exit code 0; dev server responded with HTTP 200; rendered screenshots captured and verified.
-- [x] Task 7: Battery-Proof Atomic Checkpoint & Walkthrough Artifact
-  - Verification: Git commit verified with exit code 0; walkthrough artifact created.
+- [x] Task 7: Vercel Production Deployment & Domain Aliasing
+  - Target URL: `https://kisskh-por-clone.vercel.app`
+  - Verification: Live HTTP 200, `referrer-policy: no-referrer` confirmed, subpage SPA rewrites verified without 404s.
+- [x] Task 8: GitHub Repository Publication with Elite Documentation
+  - Target Repo: `https://github.com/christpor/kisskh-por-clone`
+  - Verification: Public GitHub repository created, clean git tree with `.gitignore` and MIT License, elite `README.md` with shieldcn badges and Mermaid diagrams.
