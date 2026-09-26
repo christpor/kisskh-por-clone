@@ -36,3 +36,4 @@ dist-ssr
 screenshot_*.png
 test_screen_*.png
 debug_screen_*.png
+.env*
