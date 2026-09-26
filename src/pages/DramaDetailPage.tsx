@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Bookmark, Share2, Calendar, Globe, Film, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Play, Bookmark, Share2, Calendar, Globe, Film, CheckCircle2, ArrowLeft, ExternalLink } from 'lucide-react';
 import { DramaDetail } from '../types/drama';
 import { api } from '../services/api';
 
@@ -140,6 +140,17 @@ export const DramaDetailPage: React.FC<DramaDetailPageProps> = ({
                 <Play className="w-5 h-5 fill-current" />
                 <span>Watch Episode 1</span>
               </button>
+
+              <a
+                href={`https://kisskh.do/Drama/${drama.title.replace(/[^\w\s-]/g, '-').trim().replace(/\s+/g, '-')}?id=${drama.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-[#ff5722] hover:bg-[#e64a19] text-white font-bold px-4 py-2.5 rounded-lg shadow-lg transition-all"
+                title="View authentic movie page on kisskh.do"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>KissKH Original</span>
+              </a>
 
               <button
                 onClick={() => setBookmarked(!bookmarked)}

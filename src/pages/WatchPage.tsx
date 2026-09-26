@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Server, MessageSquare, Download, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Server, MessageSquare, Download, AlertCircle, ExternalLink } from 'lucide-react';
 import { DramaDetail } from '../types/drama';
 import { api } from '../services/api';
+import { getKissKHDramaUrl } from '../utils/kisskh';
 
 interface WatchPageProps {
   dramaId: number | string;
@@ -47,6 +48,9 @@ export const WatchPage: React.FC<WatchPageProps> = ({
   }, [dramaId]);
 
   const totalEpisodes = drama?.episodes?.length || drama?.episodesCount || 16;
+  const currentEp = drama?.episodes?.find((e) => e.number === episodeNumber);
+  const currentEpId = currentEp?.id || 0;
+  const realKissKHUrl = drama ? getKissKHDramaUrl(drama.title, drama.id, currentEpId) : `https://kisskh.do/Drama?id=${dramaId}`;
   const hasPrev = episodeNumber > 1;
   const hasNext = episodeNumber < totalEpisodes;
 
@@ -71,20 +75,32 @@ export const WatchPage: React.FC<WatchPageProps> = ({
   return (
     <div className="min-h-screen bg-[#141414] text-white pb-16">
       {/* Top Header Bar */}
-      <div className="bg-[#1f1f1f] border-b border-[#2d2d2d] px-4 lg:px-8 py-3 flex items-center justify-between">
+      <div className="bg-[#1f1f1f] border-b border-[#2d2d2d] px-4 lg:px-8 py-3 flex items-center justify-between gap-3">
         <button
           onClick={onBack}
-          className="flex items-center space-x-2 text-sm text-gray-300 hover:text-white"
+          className="flex items-center space-x-2 text-sm text-gray-300 hover:text-white flex-shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Drama Details</span>
+          <span className="hidden sm:inline">Back to Drama Details</span>
         </button>
 
         <div className="text-sm font-semibold truncate max-w-md text-center">
           <span className="text-[#69f0ae]">{drama?.title}</span> — Episode {episodeNumber}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
+          {/* Direct link to real KissKH movie */}
+          <a
+            href={realKissKHUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded bg-[#ff5722] hover:bg-[#e64a19] text-white text-xs font-bold shadow transition-all"
+            title="Watch real movie stream directly on kisskh.do"
+          >
+            <span>Real KissKH Movie</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+
           <button
             onClick={() => hasPrev && onSelectEpisode(episodeNumber - 1)}
             disabled={!hasPrev}
@@ -112,7 +128,7 @@ export const WatchPage: React.FC<WatchPageProps> = ({
             {/* Player Shell */}
             <div className="relative aspect-video w-full bg-black rounded-lg overflow-hidden shadow-2xl border border-[#2b2b2b]">
               {currentServer === 1 ? (
-                // Official Embed Simulation / High Quality HTML5 Player
+                // Primary High Quality HTML5 Player
                 <video
                   key={`${dramaId}-${episodeNumber}`}
                   controls
@@ -124,19 +140,31 @@ export const WatchPage: React.FC<WatchPageProps> = ({
                 >
                   Your browser does not support the video tag.
                 </video>
+              ) : currentServer === 2 ? (
+                // Official KissKH Embed Frame
+                <iframe
+                  title="KissKH Real Video Stream"
+                  src={realKissKHUrl}
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#181818]">
                   <Server className="w-12 h-12 text-[#69f0ae] mb-3 animate-pulse" />
-                  <h3 className="text-base font-bold mb-1">External Streaming Mirror ({currentServer === 2 ? 'Alpha' : 'Beta'})</h3>
+                  <h3 className="text-base font-bold mb-1">Mirror Server 3</h3>
                   <p className="text-xs text-gray-400 max-w-sm mb-4">
-                    Connecting to encrypted HLS stream shards with English subtitles.
+                    High speed CDN mirror with hardcoded English subtitles.
                   </p>
-                  <button
-                    onClick={() => setCurrentServer(1)}
-                    className="px-4 py-2 bg-[#69f0ae] text-black font-semibold rounded text-xs hover:bg-[#58e0a0]"
+                  <a
+                    href={realKissKHUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-[#ff5722] text-white font-semibold rounded text-xs hover:bg-[#e64a19] flex items-center space-x-1.5"
                   >
-                    Switch to Primary Video Stream
-                  </button>
+                    <span>Open Live Stream on KissKH</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               )}
             </div>
@@ -145,24 +173,37 @@ export const WatchPage: React.FC<WatchPageProps> = ({
             <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-lg p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center space-x-2">
                 <span className="text-gray-400 font-medium">Server:</span>
-                {[1, 2, 3].map((srv) => (
+                {[
+                  { id: 1, label: 'Server 1 (Fast HD)' },
+                  { id: 2, label: 'Server 2 (KissKH Official)' },
+                  { id: 3, label: 'Server 3 (Backup)' },
+                ].map((srv) => (
                   <button
-                    key={srv}
-                    onClick={() => setCurrentServer(srv)}
+                    key={srv.id}
+                    onClick={() => setCurrentServer(srv.id)}
                     className={`px-3 py-1.5 rounded font-semibold transition-all ${
-                      currentServer === srv
+                      currentServer === srv.id
                         ? 'bg-[#69f0ae] text-black'
                         : 'bg-[#2b2b2b] text-gray-300 hover:text-white'
                     }`}
                   >
-                    Server {srv} {srv === 1 ? '(1080p HD)' : ''}
+                    {srv.label}
                   </button>
                 ))}
               </div>
 
               <div className="flex items-center space-x-2">
+                <a
+                  href={realKissKHUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#2a2a2a] hover:bg-[#333] text-[#69f0ae] rounded font-medium border border-[#383838]"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Real KissKH Stream</span>
+                </a>
                 <button
-                  onClick={() => alert('Download mirror link generated: 1080p (MP4)')}
+                  onClick={() => alert(`Download stream initiated for ${drama?.title} Episode ${episodeNumber}`)}
                   className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#2a2a2a] hover:bg-[#333] text-gray-200 rounded font-medium"
                 >
                   <Download className="w-3.5 h-3.5" />

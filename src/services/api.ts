@@ -85,6 +85,19 @@ export const api = {
     return mockData.hollywood as DramaItem[];
   },
 
+  async getMostSearch(): Promise<DramaItem[]> {
+    try {
+      const res = await fetchWithTimeout('/api/DramaList/MostSearch?ispc=true');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch (e) {
+      console.warn('Falling back to local snapshot for MostSearch', e);
+    }
+    return (mockData as any).mostSearch as DramaItem[];
+  },
+
   async getExplore(page = 1, country = 0, type = 0, status = 0, order = 1): Promise<DramaListResponse> {
     try {
       const res = await fetchWithTimeout(`/api/DramaList/List?page=${page}&type=${type}&sub=0&country=${country}&status=${status}&order=${order}`);

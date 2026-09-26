@@ -5,9 +5,10 @@ import { DramaItem } from '../types/drama';
 interface HeroCarouselProps {
   slides: DramaItem[];
   onSelect: (drama: DramaItem) => void;
+  onOpenSearch?: () => void;
 }
 
-export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides, onSelect }) => {
+export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides, onSelect, onOpenSearch }) => {
   // Find index of Between Steps (2026) if present to match screenshot default
   const defaultIdx = slides.findIndex((s) => s.title.toLowerCase().includes('between steps'));
   const [currentIndex, setCurrentIndex] = useState(defaultIdx >= 0 ? defaultIdx : 0);
@@ -61,6 +62,19 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides, onSelect }) 
           {currentSlide.title}
         </span>
       </div>
+
+      {/* Top-Right Floating Search Pill matching Screenshot 0 */}
+      {onOpenSearch && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenSearch();
+          }}
+          className="absolute top-3 right-3 sm:top-5 sm:right-6 z-10 bg-black/60 hover:bg-black/80 backdrop-blur-sm text-gray-200 hover:text-white text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded shadow transition-all focus:outline-none"
+        >
+          Search
+        </button>
+      )}
 
       {/* Left Chevron (Green #69f0ae) */}
       <button

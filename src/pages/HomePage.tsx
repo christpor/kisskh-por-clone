@@ -10,6 +10,7 @@ interface HomePageProps {
   onSelectDrama: (drama: DramaItem) => void;
   onNavigate: (path: string) => void;
   onOpenAuth: () => void;
+  onOpenSearch: () => void;
   isLoggedIn: boolean;
   history: DramaItem[];
 }
@@ -18,6 +19,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onSelectDrama,
   onNavigate,
   onOpenAuth,
+  onOpenSearch,
   isLoggedIn,
   history,
 }) => {
@@ -59,7 +61,11 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="min-h-screen bg-[#181818] pb-12">
       {/* 1. Hero Carousel matching Screenshot 2 (Between Steps 2026) */}
-      <HeroCarousel slides={showSlides} onSelect={onSelectDrama} />
+      <HeroCarousel
+        slides={showSlides}
+        onSelect={onSelectDrama}
+        onOpenSearch={onOpenSearch}
+      />
 
       {/* 2. Continue Watching matching Screenshot 2 */}
       <ContinueWatching

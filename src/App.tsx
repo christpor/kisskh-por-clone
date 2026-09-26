@@ -50,10 +50,16 @@ export function App() {
       const path = window.location.pathname || '/';
       setCurrentPath(path);
       parsePath(path);
+      if (window.location.search.includes('search=1')) {
+        setIsSearchOpen(true);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
     parsePath(window.location.pathname || '/');
+    if (window.location.search.includes('search=1')) {
+      setIsSearchOpen(true);
+    }
 
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
@@ -159,6 +165,7 @@ export function App() {
         onSelectDrama={handleSelectDrama}
         onNavigate={navigate}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenSearch={() => setIsSearchOpen(true)}
         isLoggedIn={isLoggedIn}
         history={history}
       />
@@ -193,6 +200,8 @@ export function App() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onSelect={handleSelectDrama}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        isLoggedIn={isLoggedIn}
       />
 
       <ThemeModal

@@ -1389,5 +1389,71 @@
       "id": 9987,
       "title": "Ang Mutya ng Section E - The Muse of Section E"
     }
-  }
+  },
+  "mostSearch": [
+    {
+      "episodesCount": 10,
+      "label": "",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1000_and_h563_face/7w3gpt2jSlQYRJT8encKAAbJPOA.jpg",
+      "id": 10741,
+      "title": "Ang Mutya ng Section E 2: The Dark Side - The Muse of Section E: The Dark Side"
+    },
+    {
+      "episodesCount": 21,
+      "label": "",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1066_and_h600_face/AnEvWJsUj2NXDY36NZWVQtjyu2X.jpg",
+      "id": 12318,
+      "title": "My Husband Is a Mafia Boss"
+    },
+    {
+      "episodesCount": 1179,
+      "label": "",
+      "favoriteID": 0,
+      "thumbnail": "https://occ-0-4265-58.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABVnt6Oaz1UGSZFqiFBKI8f-8gRVOAELSjuy-0jMPb2S-qYDnHBjZOprwoRCch2htdhAUOa0BzHvk5pJ1je1PXS2f1A-Dk1-1gCns.webp?r=e55",
+      "id": 1266,
+      "title": "One Piece"
+    },
+    {
+      "episodesCount": 16,
+      "label": " ",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1000_and_h563_face/z9USEQxy7gI1uXhpq3oFMVr3B7e.jpg",
+      "id": 3328,
+      "title": "F4 Thailand: Boys Over Flowers"
+    },
+    {
+      "episodesCount": 12,
+      "label": "",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1000_and_h563_face/6geECjLnYbSHO4FTz9MIPWq1iWu.jpg",
+      "id": 12249,
+      "title": "Duang with You (UNCUT)"
+    },
+    {
+      "episodesCount": 19,
+      "label": "",
+      "favoriteID": 0,
+      "thumbnail": "https://serveproxy.com/?url=https://fragrancecdn1.site/c0d73a81-d05b-4873-83a7-a838d8aff09a.jpg",
+      "id": 9987,
+      "title": "Ang Mutya ng Section E - The Muse of Section E"
+    },
+    {
+      "episodesCount": 29,
+      "label": "Unlock All Ep",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1000_and_h563_face/y8to5dxGElD7r7Fp7VSczpKOHR7.jpg",
+      "id": 10606,
+      "title": "Speed and Love"
+    },
+    {
+      "episodesCount": 6,
+      "label": "Re-Edited Version",
+      "favoriteID": 0,
+      "thumbnail": "https://media.themoviedb.org/t/p/w1000_and_h563_face/vqJ60vNYuaNWAuYuJzT3Zp5Yxv9.jpg",
+      "id": 11966,
+      "title": "Heated Rivalry"
+    }
+  ]
 }

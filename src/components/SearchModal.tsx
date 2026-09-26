@@ -1,27 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
+import { ChevronLeft, UserCircle, Loader2 } from 'lucide-react';
 import { DramaItem } from '../types/drama';
 import { api } from '../services/api';
+import mockData from '../data/mock-kisskh.json';
+import { DramaCard } from './DramaCard';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (drama: DramaItem) => void;
+  onOpenAuth: () => void;
+  isLoggedIn?: boolean;
 }
 
 export const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
   onClose,
   onSelect,
+  onOpenAuth,
+  isLoggedIn = false,
 }) => {
   const [query, setQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [popularSearches, setPopularSearches] = useState<DramaItem[]>(
+    ((mockData as any).mostSearch || []) as DramaItem[]
+  );
   const [results, setResults] = useState<DramaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const filterPills = ['All', 'TVSeries', 'Movie', 'Anime', 'Hollywood'];
+
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => inputRef.current?.focus(), 80);
+      api.getMostSearch().then((items) => {
+        if (items && items.length > 0) setPopularSearches(items);
+      });
     } else {
       setQuery('');
       setResults([]);
@@ -45,98 +60,125 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       } finally {
         setLoading(false);
       }
-    }, 300);
+    }, 250);
 
     return () => clearTimeout(timer);
   }, [query]);
 
   if (!isOpen) return null;
 
+  const displayedItems = query.trim() ? results : popularSearches;
+
   return (
     <div
       data-lenis-prevent
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-sm animate-fadeIn"
-      onClick={onClose}
+      className="fixed inset-0 z-50 bg-[#181818] overflow-y-auto no-scrollbar animate-fadeIn select-none"
     >
-      <div
-        className="w-full max-w-2xl bg-[#222222] border border-[#383838] rounded-lg shadow-2xl overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3 border-b border-[#333333] bg-[#282828]">
-          <Search className="w-5 h-5 text-gray-400 mr-3" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search Asian dramas, movies, anime..."
-            className="w-full bg-transparent text-white placeholder-gray-400 text-base focus:outline-none"
-          />
-          {loading ? (
-            <Loader2 className="w-5 h-5 text-[#69f0ae] animate-spin" />
-          ) : query ? (
-            <button
-              onClick={() => setQuery('')}
-              className="text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          ) : (
+      {/* 1. Top Navigation Bar Replacement (Matches Screenshot 1) */}
+      <div className="bg-[#212121] border-b border-[#303030] px-4 lg:px-8 py-2.5">
+        <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-4">
+          {/* Left: Brand Logo + Back Chevron */}
+          <div className="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white text-xs uppercase font-medium bg-[#333] px-2 py-1 rounded"
+              className="flex items-center focus:outline-none"
+              aria-label="KissKH Home"
             >
-              Esc
+              <img
+                src="/assets/icons/long_icon.svg"
+                alt="KISSKH"
+                className="h-8 md:h-9 w-auto object-contain"
+              />
             </button>
-          )}
+            <button
+              onClick={onClose}
+              className="p-1.5 text-gray-300 hover:text-white rounded hover:bg-[#333] transition-colors"
+              aria-label="Back"
+            >
+              <ChevronLeft className="w-6 h-6 stroke-[2.5]" />
+            </button>
+          </div>
+
+          {/* Middle: Underline Search Input */}
+          <div className="flex-1 max-w-4xl relative">
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search"
+              className="w-full bg-transparent border-b-2 border-white/80 focus:border-[#69f0ae] text-white text-base sm:text-lg pb-1.5 px-1 placeholder-gray-400 focus:outline-none transition-colors"
+            />
+            {loading && (
+              <Loader2 className="w-5 h-5 text-[#69f0ae] animate-spin absolute right-2 top-1" />
+            )}
+          </div>
+
+          {/* Right: Sign In Button */}
+          <div className="flex-shrink-0">
+            <button
+              onClick={() => {
+                onClose();
+                onOpenAuth();
+              }}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded text-[13.5px] font-medium text-[#d5d5d5] hover:text-white hover:bg-[#2b2b2b] transition-colors"
+            >
+              <UserCircle className="w-4 h-4 text-[#bdbdbd]" />
+              <span className="hidden sm:inline">{isLoggedIn ? 'Account' : 'Sign in'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Filter Pills Row & Content Container */}
+      <div className="max-w-[1720px] mx-auto px-4 lg:px-8 py-5">
+        {/* Filter Pills matching Screenshot 1 */}
+        <div className="flex items-center space-x-2.5 overflow-x-auto no-scrollbar pb-4">
+          {filterPills.map((pill) => {
+            const isSelected = selectedFilter === pill;
+            return (
+              <button
+                key={pill}
+                onClick={() => setSelectedFilter(pill)}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  isSelected
+                    ? 'bg-white text-black shadow-sm'
+                    : 'bg-[#2e2e2e] text-gray-300 hover:text-white hover:bg-[#3a3a3a]'
+                }`}
+              >
+                {pill}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Results Body */}
-        <div className="max-h-[60vh] overflow-y-auto p-4 space-y-2 no-scrollbar">
-          {query.trim() === '' ? (
-            <div className="py-8 text-center text-gray-400 text-sm">
-              Type drama title or keywords to search (e.g. "Watermelon", "Frost", "Beauty")
-            </div>
-          ) : results.length === 0 && !loading ? (
-            <div className="py-8 text-center text-gray-400 text-sm">
-              No results found for "<span className="text-white">{query}</span>"
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {results.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    onSelect(item);
+        {/* Section Heading: "Popular Search" or "Search Results" */}
+        <div className="mt-3 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            {query.trim() ? `Search Results for "${query}"` : 'Popular Search'}
+          </h2>
+        </div>
+
+        {/* 3. 4-Column Responsive Grid matching Screenshot 1 */}
+        {displayedItems.length === 0 ? (
+          <div className="py-20 text-center text-gray-400 text-sm">
+            {loading ? 'Searching...' : `No results found for "${query}"`}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
+            {displayedItems.map((item) => (
+              <div key={item.id} className="w-full">
+                <DramaCard
+                  drama={item}
+                  onSelect={(d) => {
+                    onSelect(d);
                     onClose();
                   }}
-                  className="flex items-center space-x-3 p-2 rounded bg-[#1c1c1c] hover:bg-[#2e2e2e] cursor-pointer transition-colors group"
-                >
-                  <img
-                    src={item.thumbnail}
-                    alt={item.title}
-                    className="w-16 h-10 object-cover rounded flex-shrink-0"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        'https://media.themoviedb.org/t/p/w1000_and_h563_face/l5F7zrjACILbCwYAozRs74q3W18.jpg';
-                    }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-sm text-white group-hover:text-[#69f0ae] truncate font-medium">
-                      {item.title}
-                    </h4>
-                    {item.episodesCount && (
-                      <span className="text-[11px] text-gray-400">
-                        {item.episodesCount} Episodes
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
